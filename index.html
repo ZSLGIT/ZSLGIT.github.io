@@ -175,6 +175,7 @@
 
         /* Empty state */
         .empty-state {
+            grid-column: 1 / -1;
             text-align: center; padding: 80px 20px;
             color: var(--text-secondary);
         }
@@ -190,7 +191,7 @@
         @keyframes spin { to { transform: rotate(360deg); } }
 
         /* ===== Article Reader ===== */
-        .article-view { display: none; }
+        .article-view { display: none; margin-top: 50px; }
         .article-view.active { display: block; }
         .list-view.hidden { display: none; }
 
