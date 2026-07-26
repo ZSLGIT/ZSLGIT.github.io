@@ -27,12 +27,15 @@
             background: var(--bg-primary);
             color: var(--text-primary);
             line-height: 1.7;
-            min-height: 100vh;
+            height: 100vh;
+            overflow: hidden;          /* 页面本身不滚动，由 .main 内部滚动 */
+            display: flex;
+            flex-direction: column;
         }
 
         /* ===== Header ===== */
         .header {
-            position: fixed; top: 0; left: 0; right: 0;
+            flex: 0 0 auto;            /* 固定在顶部，不随内容滚动 */
             z-index: 100;
             backdrop-filter: blur(20px) saturate(180%);
             background: rgba(10,10,15,.75);
@@ -62,14 +65,23 @@
         }
         .nav-links a:hover { color: var(--text-primary); }
 
-        /* ===== Hero ===== */
+        /* ===== Layout (首页左右分栏) ===== */
+        .layout {
+            flex: 1 1 auto;
+            display: flex;
+            flex-direction: row;
+            min-height: 0;            /* 允许子项收缩以触发内部滚动 */
+        }
+
+        /* ===== Hero (左栏) ===== */
         .hero {
+            flex: 1 1 0;
+            min-width: 0;
             position: relative;
             min-height: 420px;
             display: flex; flex-direction: column;
             align-items: center; justify-content: center;
             overflow: hidden;
-            margin-top: 64px;
         }
         .hero-bg {
             position: absolute; inset: 0;
@@ -107,16 +119,62 @@
             to   { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== Main Content ===== */
-        .main { max-width: 1100px; margin: 0 auto; padding: 48px 24px 80px; }
+        /* ===== Main Content (右栏 / 滚动区) ===== */
+        .main {
+            flex: 1 1 0;               /* 右侧面板，填满 header 与 footer 之间，超出则内部滚动 */
+            min-width: 0;
+            margin: 20px 20px 20px;
+            overflow-y: auto;         /* 唯一滚动区 */
+            overflow-x: hidden;        /* 防止 sticky 负边距引发横向滚动 */
+            /* 暗色主题：弱化默认滚动条 */
+            scrollbar-width: thin;
+            scrollbar-color: var(--border) transparent;
+        }
+        .main::-webkit-scrollbar { width: 8px; }
+        .main::-webkit-scrollbar-track { background: transparent; }
+        .main::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 8px;
+        }
+        .main::-webkit-scrollbar-thumb:hover { background: var(--accent); }
 
         /* Post List View */
         .section-header {
+            position: sticky;          /* 固定在 main 顶部，不随内容滚动 */
+            top: 0;
+            z-index: 5;
+            margin: 0 -24px 32px;      /* 拉满 main 左右内边距，背景铺满 */
+            padding: 16px 24px;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
             display: flex; align-items: center; justify-content: space-between;
-            margin-bottom: 32px;
         }
         .section-title {
             font-size: 22px; font-weight: 700;
+        }
+        .section-head-left {
+            display: flex; flex-direction: column; gap: 14px;
+            min-width: 0;
+        }
+        .category-tabs {
+            display: flex; flex-wrap: wrap; gap: 10px;
+        }
+        .category-tab {
+            font-size: 13px; font-family: inherit;
+            padding: 6px 16px; border-radius: 20px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            cursor: pointer; transition: all .2s;
+        }
+        .category-tab:hover {
+            color: var(--text-primary);
+            border-color: var(--accent);
+        }
+        .category-tab.active {
+            background: rgba(108,99,255,.15);
+            color: var(--accent-light);
+            border-color: rgba(108,99,255,.4);
         }
         .search-box {
             background: var(--bg-secondary);
@@ -191,30 +249,51 @@
         @keyframes spin { to { transform: rotate(360deg); } }
 
         /* ===== Article Reader ===== */
-        .article-view { display: none; margin-top: 50px; }
+        .article-view { display: none; }
         .article-view.active { display: block; }
         .list-view.hidden { display: none; }
+
+        /* 文章顶部：返回按钮 + 标题，固定不随正文滚动 */
+        .article-header {
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            margin: 0 -24px;
+            padding: 16px 24px 24px;
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border);
+        }
+        .article-header .divider { display: none; }  /* 用头部底边作分隔，避免双线 */
+
+        /* 返回列表 + 标题 + 时间 同一行 */
+        .article-top {
+            display: flex; align-items: center; gap: 16px;
+        }
 
         .back-bar {
             display: inline-flex; align-items: center; gap: 6px;
             color: var(--accent-light); text-decoration: none;
             font-size: 14px; font-weight: 500;
-            margin-bottom: 28px; cursor: pointer;
+            margin-bottom: 0; cursor: pointer;
             transition: color .2s;
+            flex: 0 0 auto;
         }
         .back-bar:hover { color: var(--text-primary); }
 
         .article-meta {
-            margin-bottom: 8px; font-size: 14px; color: var(--accent-light);
+            margin-top: 10px; font-size: 14px; color: var(--accent-light);
+            white-space: nowrap; flex: 0 0 auto;
         }
         .article-title {
-            font-size: clamp(28px, 4vw, 42px);
+            flex: 1 1 auto; min-width: 0;
+            font-size: clamp(20px, 3vw, 30px);
             font-weight: 800; line-height: 1.25;
-            margin-bottom: 12px; letter-spacing: -.5px;
+            margin: 0; letter-spacing: -.5px;
+            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
         }
         .article-tags-row {
             display: flex; flex-wrap: wrap; gap: 8px;
-            margin-bottom: 36px;
+            margin: 12px 0 0;
         }
         .divider {
             height: 1px; background: var(--border);
@@ -225,6 +304,7 @@
         .markdown-body {
             font-size: 16px; line-height: 1.85;
             max-width: 760px;
+            margin-left: auto; margin-right: auto;
         }
         .markdown-body h1, .markdown-body h2,
         .markdown-body h3, .markdown-body h4 {
@@ -276,6 +356,7 @@
 
         /* ===== Footer ===== */
         .footer {
+            flex: 0 0 auto;            /* 始终固定在底部，不随内容滚动 */
             text-align: center; padding: 32px 24px;
             color: var(--text-secondary); font-size: 13px;
             border-top: 1px solid var(--border);
@@ -284,9 +365,12 @@
         /* ===== Responsive ===== */
         @media (max-width: 640px) {
             .header-inner { padding: 0 16px; }
-            .hero { min-height: 340px; }
+            .layout { flex-direction: column; }
+            .hero { flex: 0 0 auto; min-height: 340px; }
             .hero-logo { width: 200px; }
-            .main { padding: 32px 16px 60px; }
+            .main { flex: 1 1 auto; padding: 32px 16px 60px; }
+            .section-header { margin: 0 -16px 24px; padding: 12px 16px; }
+            .article-header { margin: 0 -16px; padding: 12px 16px 20px; }
             .post-grid { grid-template-columns: 1fr; }
             .search-box { width: 160px; }
             .section-header { flex-direction: column; gap: 16px; align-items: stretch; }
@@ -307,6 +391,9 @@
     </div>
 </header>
 
+<!-- Layout (首页左右分栏) -->
+<div class="layout">
+
 <!-- Hero -->
 <section class="hero" id="hero">
     <div class="hero-bg"></div>
@@ -321,7 +408,10 @@
     <!-- 文章列表视图 -->
     <div class="list-view" id="listView">
         <div class="section-header">
-            <h2 class="section-title">文章</h2>
+            <div class="section-head-left">
+                <h2 class="section-title" id="sectionTitle">文章</h2>
+                <div class="category-tabs" id="categoryTabs"></div>
+            </div>
             <input class="search-box" id="searchInput" placeholder="搜索文章..." oninput="filterPosts()">
         </div>
         <div class="post-grid" id="postGrid"></div>
@@ -329,20 +419,28 @@
 
     <!-- 文章阅读视图 -->
     <div class="article-view" id="articleView">
+        <div class="article-header">
+        <div class="article-top">
         <a class="back-bar" onclick="goBack()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
             返回列表
         </a>
-        <div class="article-meta" id="articleMeta"></div>
         <h1 class="article-title" id="articleTitle"></h1>
-        <div class="article-tags-row" id="articleTags"></div>
+        </div><!-- /.article-top -->
+        <div class="article-top">
+            <div class="article-meta" id="articleMeta"></div>
+            <div class="article-tags-row" id="articleTags"></div>
+        </div>
         <div class="divider"></div>
+        </div><!-- /.article-header -->
         <div class="markdown-body" id="articleContent">
             <div class="loading"><div class="spinner"></div><br>加载中...</div>
         </div>
     </div>
 
 </main>
+
+</div><!-- /.layout -->
 
 <footer class="footer">
     &copy; 2026 Z&L Blog &middot; Powered by GitHub Pages E-mail:1127441883@qq.com
@@ -355,14 +453,20 @@
 
 <script>
 // ========== 配置 ==========
-const POSTS_INDEX = 'posts.json'; // 文章索引文件
+const TAG_INDEX = 'tag.json';   // 分类数据库：每个分类指向一个文章列表 JSON
+const ALL_CATEGORY = { id: 'all', name: '全部', file: '' }; // 自动聚合所有分类的“全部”视图
 
 // ========== 状态 ==========
-let allPosts = [];
+let allCategories = [];         // 真实分类列表（来自 tag.json）[{id,name,file}]
+let displayCategories = [];     // 展示用分类：['全部', ...真实分类]
+let categoryPostsMap = {};      // 各分类已加载的文章列表：id -> posts[]
+let aggregatedPosts = [];       // 聚合后的全部文章（按 file 去重）
+let currentCategory = null;     // 当前选中的分类
+let allPosts = [];              // 当前分类下的文章列表
 
 // ========== 初始化 ==========
 document.addEventListener('DOMContentLoaded', () => {
-    loadPosts();
+    loadCategories();
     setupHeaderScroll();
     setupRouter();
     setupLinkInterceptor();
@@ -370,25 +474,97 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ========== Header 滚动效果 ==========
 function setupHeaderScroll() {
-    window.addEventListener('scroll', () => {
-        document.getElementById('header').classList.toggle('scrolled', window.scrollY > 10);
+    const scroller = document.querySelector('.main');
+    scroller.addEventListener('scroll', () => {
+        document.getElementById('header').classList.toggle('scrolled', scroller.scrollTop > 10);
     });
 }
 
-// ========== 加载文章列表 ==========
-async function loadPosts() {
+// ========== 加载分类数据库 ==========
+async function loadCategories() {
     const grid = document.getElementById('postGrid');
+    grid.innerHTML = '<div class="loading"><div class="spinner"></div><br>加载中...</div>';
     try {
-        const res = await fetch(POSTS_INDEX);
+        const res = await fetch(TAG_INDEX);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        allPosts = await res.json();
-        renderPosts(allPosts);
+        allCategories = await res.json();
     } catch (e) {
-        grid.innerHTML = `<div class="empty-state">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
-            <p>暂无文章<br><small style="opacity:.6">请创建 posts.json 配置文章索引</small></p>
-        </div>`;
+        allCategories = [];
     }
+    // 预加载所有分类文章并聚合出“全部”
+    await loadAllCategoryPosts();
+    displayCategories = [ALL_CATEGORY, ...allCategories];
+    renderCategoryTabs();
+
+    // 优先按 URL 指定分类，否则默认展示“全部”
+    const m = location.hash.slice(1).match(/^\/cat\/(.+)$/);
+    if (m) {
+        const cat = displayCategories.find(c => c.id === decodeURIComponent(m[1]));
+        if (cat) { selectCategory(cat); return; }
+    }
+    selectCategory(ALL_CATEGORY);
+}
+
+// 预加载所有分类文件并聚合（按 file 去重）
+async function loadAllCategoryPosts() {
+    categoryPostsMap = {};
+    await Promise.all(allCategories.map(async (cat) => {
+        try {
+            const r = await fetch(cat.file);
+            if (!r.ok) throw new Error(`HTTP ${r.status}`);
+            const posts = await r.json();
+            categoryPostsMap[cat.id] = Array.isArray(posts) ? posts : [];
+        } catch (e) {
+            categoryPostsMap[cat.id] = [];
+        }
+    }));
+    const seen = new Set();
+    aggregatedPosts = [];
+    allCategories.forEach(cat => {
+        (categoryPostsMap[cat.id] || []).forEach(p => {
+            if (p && p.file && !seen.has(p.file)) {
+                seen.add(p.file);
+                aggregatedPosts.push(p);
+            }
+        });
+    });
+}
+
+// ========== 渲染分类标签栏 ==========
+function renderCategoryTabs() {
+    const wrap = document.getElementById('categoryTabs');
+    wrap.innerHTML = displayCategories.map(c =>
+        `<button class="category-tab" data-id="${escapeHtml(c.id)}" onclick="selectCategoryById('${escapeHtml(c.id)}')">${escapeHtml(c.name)}</button>`
+    ).join('');
+    highlightActiveTab();
+}
+
+function highlightActiveTab() {
+    document.querySelectorAll('.category-tab').forEach(b => {
+        b.classList.toggle('active', currentCategory && b.dataset.id === currentCategory.id);
+    });
+}
+
+// 通过 id 选择分类（由标签点击触发）
+function selectCategoryById(id) {
+    const cat = displayCategories.find(c => c.id === id);
+    if (!cat) return;
+    const target = '#/cat/' + encodeURIComponent(cat.id);
+    selectCategory(cat);                        // 立即渲染，确保点击必响应
+    if (location.hash !== target) location.hash = target; // 同步 URL（hashchange 会幂等再渲染一次，无副作用）
+}
+
+// ========== 选择分类并渲染文章 ==========
+function selectCategory(cat) {
+    currentCategory = cat;
+    highlightActiveTab();
+    document.getElementById('sectionTitle').textContent = cat.name || '文章';
+    document.getElementById('searchInput').value = '';
+    showListView();
+
+    // “全部”直接使用聚合结果；其它分类读取已预加载的列表
+    allPosts = (cat.id === 'all') ? aggregatedPosts : (categoryPostsMap[cat.id] || []);
+    renderPosts(allPosts);
 }
 
 function renderPosts(posts) {
@@ -487,8 +663,8 @@ async function openPost(file) {
 
         document.getElementById('articleContent').innerHTML = html;
 
-        // 滚动到顶部
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        // 滚动到顶部（滚动容器为 .main）
+        document.querySelector('.main').scrollTo({ top: 0, behavior: 'smooth' });
     } catch (e) {
         document.getElementById('articleContent').innerHTML =
             `<div class="empty-state"><p>文章加载失败<br><small>${escapeHtml(e.message)}</small></p></div>`;
@@ -507,9 +683,12 @@ function showListView() {
     document.getElementById('hero').style.display = '';
 }
 function goHome() {
-    showListView();
-    history.pushState(null, '', location.pathname);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (currentCategory) {
+        location.hash = '#/cat/' + encodeURIComponent(currentCategory.id);
+    } else {
+        showListView();
+    }
+    document.querySelector('.main').scrollTo({ top: 0, behavior: 'smooth' });
 }
 
 // 回退：已在本站导航则退回上一页（支持文章间回退），否则回到列表
@@ -529,8 +708,14 @@ function setupRouter() {
 function handleRoute() {
     const hash = location.hash.slice(1); // 去掉 #
     if (!hash) { showListView(); return; }
+    const cm = hash.match(/^\/cat\/(.+)$/);
+    if (cm) {
+        const cat = allCategories.find(c => c.id === decodeURIComponent(cm[1]));
+        if (cat) { selectCategory(cat); return; }
+    }
     const m = hash.match(/^\/post\/(.+)$/);
-    if (m) openPost(decodeURIComponent(m[1]));
+    if (m) { openPost(decodeURIComponent(m[1])); return; }
+    showListView();
 }
 
 // ========== 工具函数 ==========

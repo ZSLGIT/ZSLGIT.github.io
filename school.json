@@ -1,52 +1,37 @@
 [
     {
-        "title": "win使用手册",
-        "date": "2026-07-24",
-        "file": "posts/win 使用手册.md",
-        "description": "这是我关于Windows的一些使用上的记录。",
-        "tags": [
-            "win",
-            "记录"
-        ]
-    },
-    {
         "title": "C# 开发手册",
         "date": "2026-07-24",
-        "file": "posts/C# 开发手册.md",
+        "file": "posts/CSharp开发手册.md",
         "description": "这是我关于C#的一些使用上的记录。",
-        "tags": [
-        ]
+        "tags": []
     },
     {
         "title": "CSS使用文档",
         "date": "2026-07-24",
         "file": "posts/CSS使用文档.md",
         "description": "这是我关于CSS的一些使用上的记录。",
-        "tags": [
-        ]
+        "tags": []
     },
     {
         "title": "Docker_Podman使用手册",
         "date": "2026-07-24",
         "file": "posts/Docker_Podman使用手册.md",
         "description": "这是我关于Docker_Podman的一些使用上的记录。",
-        "tags": [
-        ]
+        "tags": []
     },
     {
         "title": "JS使用手册",
         "date": "2026-07-24",
         "file": "posts/JS使用手册.md",
         "description": "这是我关于JS的一些使用上的记录。",
-        "tags": [
-        ]
+        "tags": []
     },
     {
         "title": "K3S使用手册",
         "date": "2026-07-24",
         "file": "posts/K3S使用手册.md",
         "description": "这是我关于K3S的一些使用上的记录。",
-        "tags": [
-        ]
+        "tags": []
     }
 ]

@@ -1,0 +1,12 @@
+[
+    {
+        "id": "study",
+        "name": "学习笔记",
+        "file": "school.json"
+    },
+    {
+        "id": "tools",
+        "name": "日常工具",
+        "file": "tools.json"
+    }
+]
