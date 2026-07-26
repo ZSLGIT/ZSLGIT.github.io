@@ -36,7 +36,15 @@ export function bindEvents() {
 
         // 3) 分类标签（动态渲染）
         const tab = e.target.closest('.category-tab');
-        if (tab) { selectCategoryById(tab.dataset.id); return; }
+        if (tab) {
+            selectCategoryById(tab.dataset.id);
+            // 手机端：选择后自动收起标签，露出文章列表
+            if (sectionHeadLeft) {
+                sectionHeadLeft.classList.remove('tags-open');
+                if (tagToggle) tagToggle.setAttribute('aria-expanded', 'false');
+            }
+            return;
+        }
 
         // 4) 文章卡片（动态渲染）
         const card = e.target.closest('.post-card');
@@ -46,4 +54,14 @@ export function bindEvents() {
     // 搜索框输入
     const search = document.getElementById('searchInput');
     if (search) search.addEventListener('input', filterPosts);
+
+    // 手机端：分类标签折叠/展开
+    const tagToggle = document.getElementById('tagToggle');
+    const sectionHeadLeft = document.getElementById('sectionHeadLeft');
+    if (tagToggle && sectionHeadLeft) {
+        tagToggle.addEventListener('click', () => {
+            const open = sectionHeadLeft.classList.toggle('tags-open');
+            tagToggle.setAttribute('aria-expanded', String(open));
+        });
+    }
 }

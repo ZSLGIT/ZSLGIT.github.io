@@ -38,10 +38,15 @@
     <!-- 文章列表视图 -->
     <div class="list-view" id="listView">
         <div class="section-header">
-            <div class="section-head-left">
+        <div class="section-head-left" id="sectionHeadLeft">
+            <div class="section-title-row">
                 <h2 class="section-title" id="sectionTitle">文章</h2>
-                <div class="category-tabs" id="categoryTabs"></div>
+                <button class="tag-toggle" id="tagToggle" type="button" aria-expanded="false" aria-label="展开/收起标签">
+                    <svg class="tag-toggle-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg>
+                </button>
             </div>
+            <div class="category-tabs" id="categoryTabs"></div>
+        </div>
             <input class="search-box" id="searchInput" placeholder="搜索文章...">
         </div>
         <div class="post-grid" id="postGrid"></div>

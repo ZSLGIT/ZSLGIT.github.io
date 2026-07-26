@@ -152,6 +152,25 @@ body {
     display: flex; flex-direction: column; gap: 14px;
     min-width: 0;
 }
+.section-title-row {
+    display: flex; align-items: center; gap: 8px;
+}
+.tag-toggle {
+    display: none;            /* 仅手机端显示 */
+    align-items: center; justify-content: center;
+    width: 30px; height: 30px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text-secondary);
+    cursor: pointer;
+    transition: color .2s, border-color .2s, transform .25s;
+}
+.tag-toggle:hover { color: var(--text-primary); border-color: var(--accent); }
+.tag-toggle-icon { transition: transform .25s; }
+/* 展开状态下旋转箭头 */
+.section-head-left.tags-open .tag-toggle-icon { transform: rotate(180deg); }
+.section-head-left.tags-open .tag-toggle { color: var(--accent-light); border-color: rgba(108,99,255,.4); }
 .category-tabs {
     display: flex; flex-wrap: wrap; gap: 10px;
 }
@@ -362,13 +381,17 @@ body {
 @media (max-width: 640px) {
     .header-inner { padding: 0 16px; }
     .layout { flex-direction: column; }
-    .hero { flex: 0 0 auto; min-height: 340px; }
-    .hero-logo { width: 200px; }
-    .main { flex: 1 1 auto; padding: 32px 16px 60px; }
+    /* 手机端隐藏 logo 大图区，把空间全部让给文章列表 */
+    .hero { display: none; }
+    .main { flex: 1 1 auto; margin: 24px 16px 60px; }
     .section-header { margin: 0 -16px 24px; padding: 12px 16px; }
     .article-header { margin: 0 -16px; padding: 12px 16px 20px; }
     .post-grid { grid-template-columns: 1fr; }
     .search-box { width: 160px; }
     .section-header { flex-direction: column; gap: 16px; align-items: stretch; }
     .nav-links { display: none; }
+    /* 手机端：分类标签可折叠，默认折叠以露出文章列表 */
+    .tag-toggle { display: inline-flex; }
+    .category-tabs { display: none; }
+    .section-head-left.tags-open .category-tabs { display: flex; }
 }
