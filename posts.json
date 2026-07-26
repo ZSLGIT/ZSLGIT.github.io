@@ -1,1 +1,22 @@
-[{"title": "欢迎来到 Z&L Blog", "date": "2026-07-24", "file": "posts/hello-world.md", "description": "这是我的第一篇博客文章，介绍一下这个博客的由来和计划。", "tags": ["介绍", "开始"]}]
+[
+    {
+        "title": "欢迎来到 Z&L Blog",
+        "date": "2026-07-24",
+        "file": "posts/hello-world.md",
+        "description": "这是我的第一篇博客文章，介绍一下这个博客的由来和计划。",
+        "tags": [
+            "介绍",
+            "开始"
+        ]
+    },
+    {
+        "title": "win使用手册",
+        "date": "2026-07-24",
+        "file": "posts/win 使用手册.md",
+        "description": "这是我关于Windows的一些使用上的记录。",
+        "tags": [
+            "win",
+            "记录"
+        ]
+    }
+]
